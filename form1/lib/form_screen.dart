@@ -7,7 +7,7 @@ class FormScreen extends StatefulWidget {
   State<FormScreen> createState() => _FormScreenState();
 }
 
-class _FormScreenState extends State<FormScreen> {
+class _FormScreenState extends State<FormScreen> with TickerProviderStateMixin {
   var _name = '';
   var _email = '';
   var _password = '';
@@ -20,6 +20,7 @@ class _FormScreenState extends State<FormScreen> {
     return TextFormField(
         decoration: InputDecoration(
             labelText: 'Name',
+            labelStyle: TextStyle(color: Colors.black),
             icon: Icon(
               Icons.person,
               color: Colors.blue,
@@ -39,6 +40,7 @@ class _FormScreenState extends State<FormScreen> {
     return TextFormField(
         decoration: InputDecoration(
             labelText: 'Email',
+            labelStyle: TextStyle(color: Colors.black),
             icon: Icon(
               Icons.mail,
               color: Colors.red,
@@ -63,6 +65,7 @@ class _FormScreenState extends State<FormScreen> {
     return TextFormField(
         decoration: InputDecoration(
             labelText: 'Password',
+            labelStyle: TextStyle(color: Colors.black),
             icon: Icon(
               Icons.key,
               color: Colors.black,
@@ -82,6 +85,7 @@ class _FormScreenState extends State<FormScreen> {
     return TextFormField(
         decoration: InputDecoration(
             labelText: 'Phone Number',
+            labelStyle: TextStyle(color: Colors.black),
             icon: Icon(
               Icons.phone,
               color: Colors.green,
@@ -104,6 +108,7 @@ class _FormScreenState extends State<FormScreen> {
     return TextFormField(
         decoration: InputDecoration(
             labelText: 'Address',
+            labelStyle: TextStyle(color: Colors.black),
             icon: Icon(
               Icons.place,
               color: Colors.pink[900],
@@ -123,6 +128,7 @@ class _FormScreenState extends State<FormScreen> {
     return TextFormField(
         decoration: InputDecoration(
             labelText: 'Qualification',
+            labelStyle: TextStyle(color: Colors.black),
             icon: Icon(
               Icons.cast_for_education,
               color: Colors.cyan,
@@ -139,11 +145,15 @@ class _FormScreenState extends State<FormScreen> {
 
   Widget _buildAge() {
     return TextFormField(
-        decoration: InputDecoration(labelText: 'Date of Birth'),
+        decoration: InputDecoration(
+          labelText: 'Date of Birth',
+          labelStyle: TextStyle(color: Colors.black),
+          icon: Icon(Icons.calendar_month_outlined),
+        ),
         keyboardType: TextInputType.datetime,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Name is required';
+            return 'Age is required';
           }
         },
         onSaved: (value) {
@@ -153,78 +163,106 @@ class _FormScreenState extends State<FormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    TabController _tabcontroller = TabController(length: 3, vsync: this);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Form"),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [Colors.red, Colors.yellow],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 90, top: 20),
-                  child: Text(
-                    "APPLICATION FORM",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+        appBar: AppBar(
+          title: Text("Form"),
+        ),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Text(
+                  "APPLICATION FORM",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 30),
-                  child: Container(
-                    child: Center(child: Text("Photo")),
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black87)),
+              ),
+              Container(
+                child: TabBar(
+                    unselectedLabelColor: Colors.grey,
+                    labelColor: Colors.black87,
+                    controller: _tabcontroller,
+                    tabs: [
+                      Tab(
+                        text: "Personal Detail",
+                      ),
+                      Tab(
+                        text: "Doc upload",
+                      ),
+                      Tab(
+                        text: "Preview Form",
+                      )
+                    ]),
+              ),
+              Container(
+                width: double.maxFinite,
+                height: 750,
+                child: TabBarView(controller: _tabcontroller, children: [
+                  Container(
+                    margin: EdgeInsets.all(24),
+                    child: Form(
+                        key: _formkey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            _buildNameField(),
+                            _buildEmail(),
+                            _buildPassword(),
+                            _buildPhoneNumber(),
+                            _buildAddress(),
+                            _buildQualification(),
+                            _buildAge(),
+                            SizedBox(
+                              height: 100,
+                            ),
+                            ElevatedButton(
+                                onPressed: () => {
+                                      if (_formkey.currentState!.validate())
+                                        {}
+                                      else
+                                        _formkey.currentState!.save(),
+                                      print("Saved Succesfully")
+                                    },
+                                child: Text(
+                                  'Next',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                ))
+                          ],
+                        )),
                   ),
-                ),
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.all(24),
-              child: Form(
-                  key: _formkey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildNameField(),
-                      _buildEmail(),
-                      _buildPassword(),
-                      _buildPhoneNumber(),
-                      _buildAddress(),
-                      _buildQualification(),
-                      //_buildAge(),
-                      SizedBox(
-                        height: 100,
+                      Center(
+                        child: Text(
+                          "UPLOAD DOCUMENTS",
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
                       ElevatedButton(
-                          onPressed: () => {
-                                if (_formkey.currentState!.validate())
-                                  {}
-                                else
-                                  _formkey.currentState!.save(),
-                                print("Saved Succesfully")
-                              },
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ))
+                          onPressed: null,
+                          child: Text("Upload",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16)),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.teal))),
                     ],
-                  )),
-            ),
-          ],
-        ),
-      ),
-    );
+                  ),
+                  Center(
+                    child: Text(
+                      "PREVIEW DATA",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+                ]),
+              ),
+            ],
+          ),
+        ));
   }
 }
