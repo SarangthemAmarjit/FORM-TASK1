@@ -8,6 +8,9 @@ class FormScreen extends StatefulWidget {
 }
 
 class _FormScreenState extends State<FormScreen> with TickerProviderStateMixin {
+  var _items = ['App Developer', 'Website developer', 'Others'];
+  String? value;
+  var _currentItemSelected = 'App Developer';
   var _name = '';
   var _email = '';
   var _password = '';
@@ -179,6 +182,20 @@ class _FormScreenState extends State<FormScreen> with TickerProviderStateMixin {
                   "APPLICATION FORM",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
+              ),
+              DropdownButton<String>(
+                items: _items.map((String Dropdownstring) {
+                  return DropdownMenuItem<String>(
+                    value: Dropdownstring,
+                    child: Text(Dropdownstring),
+                  );
+                }).toList(),
+                onChanged: (nnDropdownstring) {
+                  setState(() {
+                    value = nnDropdownstring!;
+                  });
+                  value = "new";
+                },
               ),
               Container(
                 child: TabBar(
